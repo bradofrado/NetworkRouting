@@ -4,10 +4,6 @@ from CS312Graph import CS312Graph, CS312GraphNode
 
 class PriorityQueue(abc.ABC):
 	@abc.abstractclassmethod
-	def insert(node: CS312GraphNode) -> None:
-		pass
-
-	@abc.abstractclassmethod
 	def delete_min() -> CS312GraphNode:
 		pass
 

@@ -41,6 +41,9 @@ class NetworkRoutingSolver:
 				dist, prev = self.createEmptyDistAndPrev()
 
 				self.computePathWithQueue(queue, dist, prev, srcIndex)
+				self.dist = dist
+				self.prev = prev
+				
 				t2 = time.time()
 				return (t2-t1)
 
@@ -48,7 +51,7 @@ class NetworkRoutingSolver:
 			dist = {}
 			prev = {}
 			for node in self.network.nodes:
-				dist[node.node_id] = int('inf')
+				dist[node.node_id] = float('inf')
 				prev[node.node_id] = None
 
 			return dist, prev
