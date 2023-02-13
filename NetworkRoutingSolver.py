@@ -17,21 +17,15 @@ class NetworkRoutingSolver:
 				self.network = network
 
 		def getShortestPath( self, destIndex ):
-				self.dest = destIndex
-				# TODO: RETURN THE SHORTEST PATH FOR destIndex
-				#			 INSTEAD OF THE DUMMY SET OF EDGES BELOW
-				#			 IT'S JUST AN EXAMPLE OF THE FORMAT YOU'LL 
-				#			 NEED TO USE
 				path_edges = []
 				total_length = 0
-				node = self.network.nodes[self.source]
-				edges_left = 3
-				while edges_left > 0:
-						edge = node.neighbors[2]
-						path_edges.append( (edge.src.loc, edge.dest.loc, '{:.0f}'.format(edge.length)) )
-						total_length += edge.length
-						node = edge.dest
-						edges_left -= 1
+				edge = self.prev[destIndex]
+
+				while edge != None:
+					path_edges.append((edge.src.loc, edge.dest.loc, '{:.0f}'.format(edge.length)))
+					total_length += edge.length
+					edge = self.prev[edge.src.node_id]
+
 				return {'cost':total_length, 'path':path_edges}
 
 		def computeShortestPaths( self, srcIndex, use_heap=False ):
@@ -43,7 +37,7 @@ class NetworkRoutingSolver:
 				self.computePathWithQueue(queue, dist, prev, srcIndex)
 				self.dist = dist
 				self.prev = prev
-				
+
 				t2 = time.time()
 				return (t2-t1)
 
@@ -67,5 +61,5 @@ class NetworkRoutingSolver:
 					if newLength < dist[node.node_id]:
 						dist[node.node_id] = newLength
 						queue.decrease_key(node, newLength)	
-						prev[node.node_id] = node
+						prev[node.node_id] = edge
 
