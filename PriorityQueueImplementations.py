@@ -4,32 +4,32 @@ from PriorityQueue import PriorityQueue
 class ArrayPriorityQueue(PriorityQueue):
 	def delete_min(self):
 		minIndex = -1
-		for node_id in self.dist.keys():
-			if self.dist[node_id] != None and (minIndex == -1 or self.dist[node_id] < self.dist[minIndex]):
-				minIndex = node_id
+		for key in self.dist.keys():
+			if self.dist[key] != None and (minIndex == -1 or self.dist[key] < self.dist[minIndex]):
+				minIndex = key
 
 		if minIndex == -1:
 			return None
 		
 		self.count -= 1
 		self.dist[minIndex] = None
-		return self.nodes[minIndex]
+		return self.keys[minIndex]
 
-	def decrease_key(self, node, val):
-		self.dist[node.node_id] = val
+	def decrease_key(self, key, val):
+		self.dist[key] = val
 
 	def empty(self):
 		return self.count == 0
 
-	def make_queue(self, network, dist):
+	def make_queue(self, keys, dist, map = lambda x: x):
 		self.dist = dist.copy()
 		self.count = len(self.dist)
-		self.nodes = network.nodes
+		self.keys = mapKeys(keys, map)
 		pass
 
 class HeapPriorityQueue(PriorityQueue):
 	def delete_min(self):
-		min = self.nodes[self.heap[0][0]]
+		min = self.keys[self.heap[0][0]]
 		self.pointer[self.heap[0][0]] = None
 		self.heap[0] = None
 		self.switch(0, self.count - 1)
@@ -37,8 +37,8 @@ class HeapPriorityQueue(PriorityQueue):
 		self.pDown(0)
 		return min
 
-	def decrease_key(self, node, val):
-		index = self.pointer[node.node_id]
+	def decrease_key(self, key, val):
+		index = self.pointer[key]
 		if index == None:
 			return
 
@@ -48,15 +48,15 @@ class HeapPriorityQueue(PriorityQueue):
 	def empty(self):
 		return self.count == 0
 
-	def make_queue(self, network, dist):
+	def make_queue(self, keys, dist, map = lambda x: x):
 		self.heap = {}
 		self.pointer = {}
-		self.nodes = network.nodes
-		self.count = len(self.nodes)
-		for i in range(len(self.nodes)):
-			node = self.nodes[i]
-			self.heap[i] = [node.node_id, dist[node.node_id]]
-			self.pointer[node.node_id] = i
+		self.keys = mapKeys(keys, map)
+		self.count = len(self.keys)
+		for i in range(len(self.keys)):
+			key = self.keys[i]
+			self.heap[i] = [key, dist[key]]
+			self.pointer[key] = i
 
 			self.pUp(i)
 
@@ -97,3 +97,10 @@ class HeapPriorityQueue(PriorityQueue):
 			self.pointer[srcKey[0]] = dest
 		if destKey != None:
 			self.pointer[destKey[0]] = src
+
+def mapKeys(keys, map):
+	out = []
+	for key in keys:
+		out.append(map(key))
+
+	return out
