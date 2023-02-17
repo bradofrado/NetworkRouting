@@ -22,10 +22,19 @@ class ArrayPriorityQueue(PriorityQueue):
 		return self.count == 0
 
 	def make_queue(self, keys, dist, map = lambda x: x):
-		self.dist = dist.copy()
-		self.count = len(self.dist)
-		self.keys = mapKeys(keys, map)
+		self.dist = {}
+		self.count = 0
+		self.keys = []
+		self.map = map
+
+		for i in range(len(keys)):
+			self.insert(keys[i], dist[i])
 		pass
+
+	def insert(self, key, val):
+		self.dist[self.count] = val
+		self.keys.append(mapKeys([key], self.map)[0])
+		self.count += 1
 
 class HeapPriorityQueue(PriorityQueue):
 	def delete_min(self):
@@ -52,13 +61,18 @@ class HeapPriorityQueue(PriorityQueue):
 		self.heap = {}
 		self.pointer = {}
 		self.keys = mapKeys(keys, map)
-		self.count = len(self.keys)
+		self.count = 0
 		for i in range(len(self.keys)):
 			key = self.keys[i]
-			self.heap[i] = [key, dist[key]]
-			self.pointer[key] = i
+			self.insert(key, dist[key])
 
-			self.pUp(i)
+	def insert(self, key, val):
+		i = self.count
+		self.heap[i] = [key, val]
+		self.pointer[key] = i
+
+		self.pUp(i)
+		self.count += 1
 
 	def pUp(self, index):
 		parentKey = self.heap[index // 2] if index > 0 else None

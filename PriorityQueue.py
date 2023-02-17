@@ -19,6 +19,10 @@ class PriorityQueue(abc.ABC):
 	def make_queue(nodes: CS312Graph, dist, map) -> None:
 		pass
 
+	@abc.abstractclassmethod
+	def insert(key, val) -> None:
+		pass
+
 
 
 
