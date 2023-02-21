@@ -21,6 +21,9 @@ class NetworkRoutingSolver:
 				total_length = 0
 				edge = self.prev[destIndex]
 
+				if edge == None:
+					return { 'cost': float('inf'), 'path': [] }
+
 				while edge != None:
 					path_edges.append((edge.src.loc, edge.dest.loc, '{:.0f}'.format(edge.length)))
 					total_length += edge.length
