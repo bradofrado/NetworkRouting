@@ -2,43 +2,52 @@ from PriorityQueue import PriorityQueue
 
 
 class ArrayPriorityQueue(PriorityQueue):
+	def __init__(self):
+		self.dist = {}
+		self.count = 0
+		self.keys = set()
+		self.map = None
+		pass
+
 	def delete_min(self):
 		minIndex = -1
-		for key in self.dist.keys():
-			if self.dist[key] != None and (minIndex == -1 or self.dist[key] < self.dist[minIndex]):
+		keys = self.keys
+		for key in keys:
+			if minIndex == -1 or self.dist[key] < self.dist[minIndex]:
 				minIndex = key
 
 		if minIndex == -1:
 			return None
 		
-		self.count -= 1
-		self.dist[minIndex] = None
-		return self.keys[minIndex]
+		self.keys.remove(minIndex)
+		self.dist.pop(minIndex)
+		return minIndex
 
 	def decrease_key(self, key, val):
 		self.dist[key] = val
 
 	def empty(self):
-		return self.count == 0
+		return len(self.keys) == 0
 
 	def make_queue(self, keys, dist, map = lambda x: x):
-		self.dist = {}
-		self.count = 0
-		self.keys = []
 		self.map = map
-
 		for i in range(len(keys)):
 			self.insert(keys[i], dist[i])
-		pass
+
 
 	def insert(self, key, val):
-		self.dist[self.count] = val
-		self.keys.append(mapKeys([key], self.map)[0])
-		self.count += 1
+		self.dist[key] = val
+		key = self.map(key) if self.map != None else key
+		self.keys.add(key)
 
 class HeapPriorityQueue(PriorityQueue):
+	def __init__(self):
+		self.heap = {}
+		self.pointer = {}
+		self.count = 0
+		pass
 	def delete_min(self):
-		min = self.keys[self.heap[0][0]]
+		min = self.heap[0][0]
 		self.pointer[self.heap[0][0]] = None
 		self.heap[0] = None
 		self.switch(0, self.count - 1)
@@ -58,19 +67,16 @@ class HeapPriorityQueue(PriorityQueue):
 		return self.count == 0
 
 	def make_queue(self, keys, dist, map = lambda x: x):
-		self.heap = {}
-		self.pointer = {}
-		self.keys = mapKeys(keys, map)
-		self.count = 0
-		for i in range(len(self.keys)):
-			key = self.keys[i]
+		keys = mapKeys(keys, map)
+		for i in range(len(keys)):
+			key = keys[i]
 			self.insert(key, dist[key])
 
 	def insert(self, key, val):
 		i = self.count
 		self.heap[i] = [key, val]
 		self.pointer[key] = i
-
+		
 		self.pUp(i)
 		self.count += 1
 

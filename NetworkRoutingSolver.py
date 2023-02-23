@@ -55,7 +55,9 @@ class NetworkRoutingSolver:
 
 		def computePathWithQueue(self, queue: PriorityQueue, dist, prev, srcIndex):
 			dist[srcIndex] = 0
-			queue.make_queue(self.network.nodes, dist, lambda node: node.node_id)
+			start = self.network.nodes[srcIndex].node_id
+			queue.insert(start, dist[start])
+			
 			while not queue.empty():
 				node_id = queue.delete_min()
 				min = self.network.nodes[node_id]
@@ -64,6 +66,6 @@ class NetworkRoutingSolver:
 					newLength = dist[min.node_id] + edge.length
 					if newLength < dist[node.node_id]:
 						dist[node.node_id] = newLength
-						queue.decrease_key(node.node_id, newLength)	
+						queue.insert(node.node_id, newLength)
 						prev[node.node_id] = edge
 
