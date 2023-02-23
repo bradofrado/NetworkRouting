@@ -16,6 +16,9 @@ class NetworkRoutingSolver:
 				assert( type(network) == CS312Graph )
 				self.network = network
 
+		# Time: The complexity is that of the while loop which is going to loop through at most each of the 
+		#       nodes in prev, which is of length V, so O(V)
+		# Space: The space is that of prev which is all the nodes in the graph, or O(V)
 		def getShortestPath( self, destIndex ):
 				path_edges = []
 				total_length = 0
@@ -31,6 +34,9 @@ class NetworkRoutingSolver:
 
 				return {'cost':total_length, 'path':path_edges}
 
+		# Time: The complexity is the time for self.createEmptyDistAndPrev or O(V) 
+		#       plus the time for computePathWithQueue, which is O(VlogV) for heap and O(V^2) for array
+		#       Overall -> Heap: O(VlogV), Array: O(V^2)
 		def computeShortestPaths( self, srcIndex, use_heap=False ):
 				self.source = srcIndex
 				t1 = time.time()
@@ -44,6 +50,9 @@ class NetworkRoutingSolver:
 				t2 = time.time()
 				return (t2-t1)
 
+		# Time: the time complexity is the amount of nodes, or O(V)
+		# Space: the space complexity is the graph stored in self.network.nodes or O(V + E) or O(V)
+		#         (since E is proportional to V with 3 edges each node)
 		def createEmptyDistAndPrev(self):
 			dist = {}
 			prev = {}
@@ -53,14 +62,32 @@ class NetworkRoutingSolver:
 
 			return dist, prev
 
+
+		# Time: The time complexity is the complexity of the while loop (O(V * delete_min + E*insert)) + 
+		# 		  the complexity of the first insert statement, which is constant time because it is only one node
+		# 			so an overall of O(V*delete_min + E*insert)
+		#   Heap: insert = O(logV)
+		#         delete_min = O(logV)
+		#         overall = O(V*logV + E*logV)
+		#   Array: insert = O(1)
+		#          delete_min = O(V)
+		#          overall = O(V + EV)
+		#       Since E = 3 for each node, it is equivalent to O(V) ->
+		#               Overall final answer: Heap -> O(V*logV)
+		#                                     Array -> O(V^2)
+		# Space: The space complexity is the space of the queue + dist + prev.
+		# 			 Dist is all the nodes (O(V)) and the queue never gets more than all the nodes (O(V)). 
+		#				 So overall O(V) 
 		def computePathWithQueue(self, queue: PriorityQueue, dist, prev, srcIndex):
 			dist[srcIndex] = 0
 			start = self.network.nodes[srcIndex].node_id
 			queue.insert(start, dist[start])
 			
+			# Looping at most through each node, so V times
 			while not queue.empty():
 				node_id = queue.delete_min()
 				min = self.network.nodes[node_id]
+				# Looping through at most each edge, so E times
 				for edge in min.neighbors:
 					node = edge.dest
 					newLength = dist[min.node_id] + edge.length
