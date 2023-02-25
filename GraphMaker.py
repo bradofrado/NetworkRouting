@@ -3,24 +3,7 @@
 import math
 import random
 
-from CS312Graph import CS312Graph
-
-from which_pyqt import PYQT_VER
-
-if PYQT_VER == 'PYQT5':
-	from PyQt5.QtWidgets import *
-	from PyQt5.QtGui import *
-	from PyQt5.QtCore import *
-elif PYQT_VER == 'PYQT4':
-	from PyQt4.QtGui import *
-	from PyQt4.QtCore import *
-elif PYQT_VER == 'PYQT6':
-	from PyQt6.QtWidgets import *
-	from PyQt6.QtGui import *
-	from PyQt6.QtCore import *
-else:
-	raise Exception('Unsupported Version of PyQt: {}'.format(PYQT_VER))
-
+from CS312Graph import CS312Graph, CS312Point
 
 class GraphMaker:
   def __init__(self):
@@ -63,5 +46,5 @@ class GraphMaker:
       if True:
         xval = xr[0] + (xr[1]-xr[0])*x
         yval = yr[0] + (yr[1]-yr[0])*y
-        ptlist.append( QPointF(xval,yval) )
+        ptlist.append( CS312Point(xval,yval) )
     return ptlist

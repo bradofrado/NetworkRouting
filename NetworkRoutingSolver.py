@@ -37,6 +37,7 @@ class NetworkRoutingSolver:
 		# Time: The complexity is the time for self.createEmptyDistAndPrev or O(V) 
 		#       plus the time for computePathWithQueue, which is O(VlogV) for heap and O(V^2) for array
 		#       Overall -> Heap: O(VlogV), Array: O(V^2)
+		# Space: This function uses dist and prev and that of computePathWithQueue, which are all O(V)
 		def computeShortestPaths( self, srcIndex, use_heap=False ):
 				self.source = srcIndex
 				t1 = time.time()

@@ -81,6 +81,8 @@ class PointLineView( QWidget ):
 	def addEdge( self, startPt, endPt, label, edgeColor, labelColor=None ):
 		if not labelColor:
 			labelColor = edgeColor
+		startPt = QPointF(startPt.x(), startPt.y())
+		endPt = QPointF(endPt.x(), endPt.y())
 		assert( type(startPt) == QPointF )
 		assert( type(endPt)	  == QPointF )
 		assert( type(label)	  == str )
@@ -339,7 +341,7 @@ class Proj3GUI( QMainWindow ):
 		else:
 			id = -1
 			dist = math.inf
-			for node in self.graph.nodes:
+			for node in self.graph.getNodes():
 				if math.sqrt(pow((abs(node.loc.x()-point.x())),2) + pow((abs(node.loc.y()-point.y())),2)) < dist:
 					dist = math.sqrt(pow((abs(node.loc.x()-point.x())),2) + pow((abs(node.loc.y()-point.y())),2))
 					id = node.node_id+1
